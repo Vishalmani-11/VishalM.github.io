@@ -1,417 +1,122 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Vishal M — Cybersecurity Portfolio</title>
-  <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;700;900&family=JetBrains+Mono:wght@300;400;600&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap" rel="stylesheet"/>
-  <style>
-    :root {
-      --bg:#050508; --surface:#0d0d14; --surface2:#111119;
-      --green:#00ff9f; --cyan:#00e5ff; --pink:#ff3d9a;
-      --yellow:#f9e741; --purple:#7c3aed;
-      --white:#eef0ff; --muted:#6b6b8a; --border:rgba(255,255,255,0.06);
-      --fd:'Unbounded',sans-serif; --fm:'JetBrains Mono',monospace; --fb:'DM Sans',sans-serif;
-    }
-    *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
-    html{scroll-behavior:smooth;}
-    body{background:var(--bg);color:var(--white);font-family:var(--fb);overflow-x:hidden;cursor:none;}
-    body::before{content:'';position:fixed;inset:0;z-index:999;pointer-events:none;
-      background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-      opacity:.025;}
-    body::after{content:'';position:fixed;inset:0;z-index:998;pointer-events:none;
-      background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,255,159,.01) 2px,rgba(0,255,159,.01) 4px);}
-
-    /* CURSOR */
-    #cur{width:10px;height:10px;background:var(--green);border-radius:50%;position:fixed;top:0;left:0;pointer-events:none;z-index:9999;mix-blend-mode:screen;}
-    #curR{width:36px;height:36px;border:1.5px solid var(--green);border-radius:50%;position:fixed;top:0;left:0;pointer-events:none;z-index:9998;mix-blend-mode:screen;transition:border-color .2s;}
-
-    /* NAV */
-    nav{position:fixed;top:0;width:100%;z-index:500;padding:1rem 3rem;display:flex;align-items:center;justify-content:space-between;background:rgba(5,5,8,.88);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);}
-    .nl{font-family:var(--fm);font-size:.85rem;color:var(--green);}
-    .nl span{color:var(--muted);}
-    .nls{display:flex;gap:2.5rem;list-style:none;}
-    .nls a{font-family:var(--fm);font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);text-decoration:none;transition:color .2s;}
-    .nls a:hover{color:var(--green);}
-    .ns{display:flex;align-items:center;gap:.6rem;font-family:var(--fm);font-size:.68rem;color:var(--muted);}
-    .sd{width:7px;height:7px;background:var(--green);border-radius:50%;animation:blink 1.8s ease infinite;}
-    @keyframes blink{0%,100%{opacity:1}50%{opacity:.2}}
-
-    /* HERO */
-    #hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;padding:7rem 3rem 4rem;position:relative;overflow:hidden;}
-    .gbg{position:absolute;inset:0;pointer-events:none;
-      background-image:linear-gradient(rgba(0,255,159,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(0,255,159,.025) 1px,transparent 1px);
-      background-size:60px 60px;
-      mask-image:radial-gradient(ellipse 80% 80% at 50% 50%,black 40%,transparent 100%);}
-    .orb{position:absolute;border-radius:50%;filter:blur(100px);pointer-events:none;}
-    .o1{width:500px;height:500px;background:var(--purple);top:-150px;right:-100px;opacity:.22;animation:drift 14s ease-in-out infinite alternate;}
-    .o2{width:350px;height:350px;background:var(--pink);bottom:0;left:-50px;opacity:.18;animation:drift 10s ease-in-out infinite alternate-reverse;}
-    .o3{width:260px;height:260px;background:var(--green);top:40%;left:55%;opacity:.1;animation:drift 8s ease-in-out infinite alternate;}
-    @keyframes drift{from{transform:translate(0,0) scale(1)}to{transform:translate(30px,25px) scale(1.08)}}
-
-    .hc{position:relative;z-index:2;}
-    .hey{font-family:var(--fm);font-size:.72rem;color:var(--green);letter-spacing:.15em;text-transform:uppercase;margin-bottom:1.8rem;display:flex;align-items:center;gap:.8rem;animation:fu .7s ease both;}
-    .hey::before{content:'';display:block;width:30px;height:1px;background:var(--green);}
-    .hn{font-family:var(--fd);font-size:clamp(3.5rem,10vw,10rem);font-weight:900;line-height:.92;letter-spacing:-.04em;animation:fu .7s .08s ease both;}
-    .hn .sk{-webkit-text-stroke:2px var(--white);color:transparent;display:block;}
-    .hn .ac{color:var(--green);}
-    .hr{font-family:var(--fm);font-size:.95rem;color:var(--cyan);margin-top:1.8rem;animation:fu .7s .16s ease both;}
-    .hr::before{content:'> ';}
-    .hd{color:var(--muted);font-size:1rem;max-width:500px;margin-top:1.2rem;line-height:1.7;animation:fu .7s .24s ease both;}
-    .hctas{display:flex;gap:1rem;flex-wrap:wrap;margin-top:2.5rem;animation:fu .7s .32s ease both;}
-    .btn{display:inline-flex;align-items:center;gap:.5rem;padding:.8rem 1.8rem;border-radius:6px;font-family:var(--fm);font-size:.72rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;text-decoration:none;cursor:none;transition:all .2s;}
-    .bp{background:var(--green);color:#050508;}
-    .bp:hover{box-shadow:0 0 30px rgba(0,255,159,.4);transform:translateY(-2px);}
-    .bo{border:1px solid rgba(0,229,255,.3);color:var(--cyan);}
-    .bo:hover{border-color:var(--cyan);background:rgba(0,229,255,.06);transform:translateY(-2px);}
-    .hst{display:flex;gap:3rem;margin-top:4rem;animation:fu .7s .4s ease both;}
-    .hsn{font-family:var(--fd);font-size:2rem;font-weight:900;color:var(--yellow);}
-    .hsl{font-family:var(--fm);font-size:.62rem;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-top:.2rem;}
-    @keyframes fu{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:translateY(0)}}
-
-    /* MARQUEE */
-    .mw{background:var(--green);overflow:hidden;padding:.7rem 0;white-space:nowrap;}
-    .mi{display:inline-flex;animation:mq 22s linear infinite;}
-    .mit{font-family:var(--fm);font-size:.68rem;font-weight:600;color:#050508;text-transform:uppercase;letter-spacing:.12em;padding:0 2rem;}
-    @keyframes mq{from{transform:translateX(0)}to{transform:translateX(-50%)}}
-
-    /* SECTION BASE */
-    section{padding:6rem 3rem;}
-    .sl{font-family:var(--fm);font-size:.63rem;letter-spacing:.2em;text-transform:uppercase;color:var(--green);display:flex;align-items:center;gap:.8rem;margin-bottom:1rem;}
-    .sl::before{content:'//';color:var(--muted);}
-    .st{font-family:var(--fd);font-size:clamp(2rem,5vw,3.2rem);font-weight:900;letter-spacing:-.03em;line-height:1.05;margin-bottom:3rem;}
-
-    /* ABOUT */
-    #about{background:var(--surface);}
-    .ag{display:grid;grid-template-columns:1fr 1.4fr;gap:5rem;align-items:start;}
-    .ac2{background:var(--surface2);border:1px solid var(--border);border-radius:1rem;padding:2rem;position:relative;overflow:hidden;}
-    .ac2::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--green),var(--cyan));}
-    .aav{width:100%;aspect-ratio:1;border-radius:.8rem;background:linear-gradient(135deg,#0d1a12,#112211,#1a3a2a);display:flex;align-items:center;justify-content:center;font-size:5rem;margin-bottom:1.5rem;border:1px solid rgba(0,255,159,.15);position:relative;overflow:hidden;}
-    .aav::after{content:'VISHAL M';position:absolute;bottom:0;left:0;right:0;font-family:var(--fm);font-size:.5rem;letter-spacing:.2em;text-align:center;padding:.5rem;background:rgba(0,255,159,.08);color:var(--green);}
-    .ir{display:flex;justify-content:space-between;align-items:center;padding:.6rem 0;border-bottom:1px solid var(--border);}
-    .ir:last-child{border-bottom:none;}
-    .ik{font-family:var(--fm);font-size:.65rem;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;}
-    .iv{font-family:var(--fm);font-size:.72rem;color:var(--white);}
-    .iv.g{color:var(--green);}
-    .iv.c{color:var(--cyan);}
-    .at p{color:var(--muted);font-size:1rem;line-height:1.75;margin-bottom:1rem;}
-    .at p strong{color:var(--white);}
-    .at p .hl{color:var(--green);}
-    .cl{margin-top:1.8rem;}
-    .ci{display:flex;align-items:flex-start;gap:.8rem;padding:.7rem 1rem;border-radius:.5rem;background:rgba(0,255,159,.04);border:1px solid rgba(0,255,159,.1);margin-bottom:.6rem;font-family:var(--fm);font-size:.72rem;color:var(--muted);}
-    .ci .cx{color:var(--green);flex-shrink:0;}
-
-    /* SKILLS */
-    .sg{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:1.2rem;}
-    .sc{background:var(--surface);border:1px solid var(--border);border-radius:.8rem;padding:1.5rem;transition:all .25s;position:relative;overflow:hidden;}
-    .sc::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;}
-    .s1::before{background:linear-gradient(90deg,var(--green),var(--cyan));}
-    .s2::before{background:linear-gradient(90deg,var(--cyan),var(--purple));}
-    .s3::before{background:linear-gradient(90deg,var(--pink),var(--purple));}
-    .s4::before{background:linear-gradient(90deg,var(--yellow),var(--pink));}
-    .s5::before{background:linear-gradient(90deg,var(--purple),var(--green));}
-    .sc:hover{border-color:rgba(0,255,159,.2);transform:translateY(-4px);box-shadow:0 16px 50px rgba(0,0,0,.4);}
-    .si{font-size:1.8rem;margin-bottom:.8rem;}
-    .scat{font-family:var(--fm);font-size:.62rem;text-transform:uppercase;letter-spacing:.12em;margin-bottom:.8rem;}
-    .s1 .scat{color:var(--green);} .s2 .scat{color:var(--cyan);} .s3 .scat{color:var(--pink);} .s4 .scat{color:var(--yellow);} .s5 .scat{color:#a78bfa;}
-    .tags{display:flex;flex-wrap:wrap;gap:.4rem;}
-    .tag{font-family:var(--fm);font-size:.62rem;padding:.25rem .7rem;border-radius:4px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);color:var(--white);}
-    .pb{margin-top:2.5rem;background:linear-gradient(135deg,rgba(0,255,159,.06),rgba(0,229,255,.06));border:1px solid rgba(0,255,159,.15);border-radius:.8rem;padding:1.5rem 2rem;display:flex;align-items:center;gap:1.5rem;}
-    .pbi{font-size:2.2rem;flex-shrink:0;}
-    .pbt{font-family:var(--fd);font-size:.82rem;font-weight:700;color:var(--green);margin-bottom:.3rem;}
-    .pbd{font-family:var(--fm);font-size:.68rem;color:var(--muted);line-height:1.6;}
-    .pbd span{color:var(--cyan);}
-
-    /* PROJECTS */
-    #projects{background:var(--surface);}
-    .pg{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:1.2rem;}
-    .pc{background:var(--bg);border:1px solid var(--border);border-radius:.8rem;overflow:hidden;transition:all .3s;display:flex;flex-direction:column;}
-    .pc:hover{border-color:rgba(0,255,159,.2);transform:translateY(-6px);box-shadow:0 24px 60px rgba(0,0,0,.5);}
-    .pt{height:155px;display:flex;align-items:center;justify-content:center;font-size:3.2rem;position:relative;overflow:hidden;}
-    .pt1{background:linear-gradient(135deg,#050f08,#0a2211,#003319);}
-    .pt2{background:linear-gradient(135deg,#05080f,#0a1122,#001a33);}
-    .pt3{background:linear-gradient(135deg,#0f0508,#220a11,#330019);}
-    .pt4{background:linear-gradient(135deg,#0a080f,#170a22,#200033);}
-    .pt5{background:linear-gradient(135deg,#0a0f05,#111a0a,#192a00);}
-    .pt::after{content:attr(data-l);position:absolute;top:.7rem;right:.7rem;font-family:var(--fm);font-size:.58rem;padding:.2rem .6rem;border-radius:3px;text-transform:uppercase;letter-spacing:.06em;}
-    .pt1::after{background:rgba(0,255,159,.1);color:var(--green);border:1px solid rgba(0,255,159,.2);}
-    .pt2::after{background:rgba(0,229,255,.1);color:var(--cyan);border:1px solid rgba(0,229,255,.2);}
-    .pt3::after{background:rgba(255,61,154,.1);color:var(--pink);border:1px solid rgba(255,61,154,.2);}
-    .pt4::after{background:rgba(124,58,237,.1);color:#a78bfa;border:1px solid rgba(124,58,237,.2);}
-    .pt5::after{background:rgba(249,231,65,.1);color:var(--yellow);border:1px solid rgba(249,231,65,.2);}
-    .pb2{padding:1.4rem;flex:1;display:flex;flex-direction:column;}
-    .pl{font-family:var(--fm);font-size:.6rem;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-bottom:.4rem;}
-    .ptit{font-family:var(--fd);font-size:.9rem;font-weight:700;margin-bottom:.5rem;}
-    .pd{color:var(--muted);font-size:.85rem;line-height:1.6;margin-bottom:1.2rem;flex:1;}
-    .plinks{display:flex;gap:.6rem;}
-    .plink{font-family:var(--fm);font-size:.62rem;font-weight:600;text-transform:uppercase;letter-spacing:.06em;text-decoration:none;padding:.35rem .9rem;border-radius:4px;transition:all .2s;cursor:none;}
-    .gh{border:1px solid rgba(0,255,159,.2);color:var(--green);}
-    .gh:hover{background:rgba(0,255,159,.08);box-shadow:0 0 14px rgba(0,255,159,.15);}
-
-    /* CONTACT */
-    #contact{background:var(--bg);text-align:center;padding-bottom:8rem;position:relative;overflow:hidden;}
-    .corb{width:700px;height:700px;background:var(--purple);border-radius:50%;filter:blur(130px);opacity:.1;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);pointer-events:none;}
-    .cin{position:relative;z-index:2;}
-    .ctit{font-family:var(--fd);font-size:clamp(2.5rem,7vw,6rem);font-weight:900;letter-spacing:-.04em;line-height:.95;margin-bottom:1.5rem;}
-    .ctit .cg{color:var(--green);}
-    .ctit .cs{-webkit-text-stroke:2px var(--white);color:transparent;display:block;}
-    .csub{color:var(--muted);font-size:.95rem;margin-bottom:2.5rem;max-width:380px;margin-inline:auto;}
-    .cem{display:inline-flex;align-items:center;gap:.6rem;font-family:var(--fm);font-size:.95rem;color:var(--cyan);text-decoration:none;border-bottom:1px solid rgba(0,229,255,.3);padding-bottom:.3rem;transition:opacity .2s;cursor:none;}
-    .cem:hover{opacity:.7;}
-    .socs{display:flex;justify-content:center;gap:1rem;flex-wrap:wrap;margin-top:2.5rem;}
-    .sl2{display:inline-flex;align-items:center;gap:.5rem;padding:.6rem 1.3rem;border-radius:6px;border:1px solid var(--border);text-decoration:none;color:var(--muted);font-family:var(--fm);font-size:.68rem;text-transform:uppercase;letter-spacing:.08em;transition:all .2s;cursor:none;}
-    .sl2:hover{color:var(--white);border-color:rgba(0,255,159,.3);background:rgba(0,255,159,.05);}
-
-    footer{padding:1.5rem 3rem;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;font-family:var(--fm);font-size:.62rem;color:var(--muted);}
-    .fs{color:var(--green);}
-
-    .reveal{opacity:0;transform:translateY(32px);transition:opacity .7s ease,transform .7s ease;}
-    .reveal.visible{opacity:1;transform:translateY(0);}
-
-    @media(max-width:768px){
-      nav{padding:1rem 1.5rem;}
-      .nls,.ns{display:none;}
-      section{padding:4rem 1.5rem;}
-      #hero{padding:6rem 1.5rem 3rem;}
-      .ag{grid-template-columns:1fr;gap:2.5rem;}
-      .hst{gap:1.5rem;}
-      footer{flex-direction:column;gap:.5rem;text-align:center;}
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#13111f">
+<meta name="description" content="Vishal Mani - Student developer who builds projects, solves security challenges, and writes up what I learn.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<title>Vishal Mani | Portfolio</title>
 </head>
 <body>
+<a href="#main-content" class="skip-link">Skip to content</a>
 
-<div id="cur"></div>
-<div id="curR"></div>
+<div class="scan" aria-hidden="true"></div>
 
-<!-- NAV -->
-<nav>
-  <div class="nl"><span>~/</span>vishal_m</div>
-  <ul class="nls">
-    <li><a href="#about">about</a></li>
-    <li><a href="#skills">skills</a></li>
-    <li><a href="#projects">projects</a></li>
-    <li><a href="#contact">contact</a></li>
-  </ul>
-  <div class="ns"><div class="sd"></div>Open to Internships</div>
-</nav>
+<aside class="side" aria-label="Main navigation">
+  <a class="logo" href="#top"><span class="mk" aria-hidden="true">V</span><span>Vishal Mani</span></a>
+  <nav class="grp">
+    <span class="gl" hidden aria-hidden="true">Portfolio</span>
+    <a class="item on" data-s="top" href="#top" aria-label="Home"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11l9-8 9 8M5 10v10h14V10"/></svg><span>Home</span></a>
+    <a class="item" data-s="about" href="#about" aria-label="About"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg><span>About</span></a>
+    <a class="item" data-s="projects" href="#projects" aria-label="Projects"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg><span>Projects</span></a>
+    <a class="item" data-s="writeups" href="#writeups" aria-label="Writeups"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20h9M16.5 3.5a2.1 2.1 0 013 3L7 19l-4 1 1-4z"/></svg><span>Writeups</span></a>
+    <a class="item" data-s="contact" href="#contact" aria-label="Contact"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg><span>Contact</span></a>
+  </nav>
+  <div class="grp foot-s"></div>
+</aside>
 
-<!-- HERO -->
-<section id="hero">
-  <div class="gbg"></div>
-  <div class="orb o1"></div>
-  <div class="orb o2"></div>
-  <div class="orb o3"></div>
-  <div class="hc">
-    <div class="hey">Cybersecurity Student &amp; Builder</div>
-    <h1 class="hn">Vishal<span class="ac">_</span><br><span class="sk">M</span></h1>
-    <div class="hr" id="role">Pentester. Tool Builder. Threat Thinker.</div>
-    <p class="hd">2nd year B.Tech Cybersecurity student at Dr. Mahalingam College of Engineering and Technology — building real offensive &amp; defensive security tools while actively hunting vulnerabilities in lab environments.</p>
-    <div class="hctas">
-      <a href="#projects" class="btn bp">View Projects →</a>
-      <a href="https://github.com/Vishalmani-11" target="_blank" class="btn bo">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.44 9.8 8.2 11.38.6.11.82-.26.82-.58v-2.03c-3.34.72-4.04-1.61-4.04-1.61-.54-1.38-1.33-1.75-1.33-1.75-1.09-.74.08-.73.08-.73 1.2.08 1.84 1.24 1.84 1.24 1.07 1.83 2.8 1.3 3.49 1 .11-.78.42-1.3.76-1.6-2.67-.3-5.47-1.33-5.47-5.93 0-1.31.47-2.38 1.24-3.22-.12-.3-.54-1.52.12-3.18 0 0 1.01-.32 3.3 1.23a11.5 11.5 0 0 1 3-.4c1.02.004 2.04.14 3 .4 2.28-1.55 3.29-1.23 3.29-1.23.66 1.66.24 2.88.12 3.18.77.84 1.24 1.91 1.24 3.22 0 4.61-2.81 5.63-5.48 5.93.43.37.81 1.1.81 2.22v3.29c0 .32.22.7.83.58C20.57 21.8 24 17.3 24 12c0-6.63-5.37-12-12-12z"/></svg>
-        GitHub
-      </a>
-    </div>
-    <div class="hst">
-      <div><div class="hsn">8.5</div><div class="hsl">CGPA</div></div>
-      <div><div class="hsn">5+</div><div class="hsl">Projects</div></div>
-      <div><div class="hsn">100%</div><div class="hsl">PortSwigger Labs</div></div>
-    </div>
-  </div>
-</section>
-
-<!-- MARQUEE -->
-<div class="mw">
-  <div class="mi">
-    <span class="mit">Web Pentesting ●</span><span class="mit">Network Security ●</span><span class="mit">Malware Analysis ●</span><span class="mit">Linux Hardening ●</span><span class="mit">Firewall Automation ●</span><span class="mit">Threat Modeling ●</span><span class="mit">Open Source ●</span>
-    <span class="mit">Web Pentesting ●</span><span class="mit">Network Security ●</span><span class="mit">Malware Analysis ●</span><span class="mit">Linux Hardening ●</span><span class="mit">Firewall Automation ●</span><span class="mit">Threat Modeling ●</span><span class="mit">Open Source ●</span>
-  </div>
+<div class="topr" role="group" aria-label="External links">
+  <a class="btn" href="https://github.com/vishalmani-11" target="_blank" rel="noopener noreferrer">GitHub</a>
+  <a class="btn s" href="#contact">Hire me</a>
 </div>
 
-<!-- ABOUT -->
-<section id="about">
-  <div class="ag reveal">
+<div class="main">
+  <div class="hz"><canvas id="net" aria-hidden="true"></canvas>
+  <div class="w"><header class="hero" id="top">
     <div>
-      <div class="ac2">
-        <div class="aav">🕵️</div>
-        <div class="ir"><span class="ik">Name</span><span class="iv">Vishal M</span></div>
-        <div class="ir"><span class="ik">Status</span><span class="iv g">● 2nd Year — Active</span></div>
-        <div class="ir"><span class="ik">Degree</span><span class="iv">B.Tech Cybersecurity</span></div>
-        <div class="ir"><span class="ik">CGPA</span><span class="iv c">8.5 / 10.0</span></div>
-        <div class="ir"><span class="ik">Location</span><span class="iv">Coimbatore, TN</span></div>
-        <div class="ir"><span class="ik">Daily OS</span><span class="iv">Arch Linux / Kali</span></div>
+      <p class="eb">Developer portfolio. Open to internships.</p>
+      <h1><span>Build it. Break it.</span><span>Write it up.</span></h1>
+      <p class="pitch" id="tagline">[ONE LINE]</p>
+      <a class="btn s" href="#projects">View projects</a>
+      <a class="btn" href="projects.html">All projects</a>
+    </div>
+    <div class="tm" role="img" aria-label="Terminal">
+      <div class="tbar"><div class="st"><span>Portfolio</span><span>Level 0</span><span class="v">SSH 22</span></div><span class="live"><i class="led" aria-hidden="true"></i>Live</span></div>
+      <div class="tw" aria-hidden="true">
+        <div class="tl" style="animation-delay:.3s"><span class="mu">$ </span><span class="ty g">ssh visitor@vishalmani.dev -p 22</span></div>
+        <div class="tl" style="animation-delay:1.9s">visitor@vishalmani.dev's password:</div>
+        <div class="tl" style="animation-delay:2.3s"> </div>
+        <div class="tl rd" style="animation-delay:2.6s">  VISHAL MANI :: PORTFOLIO :: LEVEL 0</div>
+        <div class="tl" style="animation-delay:2.9s">  You are on a real portfolio.</div>
+        <div class="tl" style="animation-delay:3.2s">  Every project is a real repo.</div>
+        <div class="tl" style="animation-delay:3.5s">  Every writeup is a real solve.</div>
+        <div class="tl" style="animation-delay:3.8s"> </div>
+        <div class="tl" style="animation-delay:4.7s"> </div>
+        <div class="tl" style="animation-delay:5s"><span class="g">visitor@portfolio</span><span class="mu">:~$ </span><span class="cur"></span></div>
       </div>
     </div>
-    <div class="at">
-      <div class="sl">About Me</div>
-      <h2 class="st">Breaking things<br>to <span style="color:var(--green)">fix them.</span></h2>
-      <p>I'm a <strong>cybersecurity student</strong> who doesn't just study security — I build the tools that make systems more secure. From <span class="hl">making Linux machines invisible on a network</span> to automating firewall configuration, my projects solve real problems.</p>
-      <p>I specialize in <strong>web &amp; network pentesting</strong>, static malware analysis, and Linux system hardening. I've completed all server-side labs on <span class="hl">PortSwigger Web Security Academy</span> — SQLi, SSRF, XXE, business logic flaws, and broken auth — hands-on, not just theory.</p>
-      <p>I run a custom-built <strong>Arch Linux</strong> daily. I believe the best way to learn security is to build, break, and repeat.</p>
-      <div class="cl">
-        <div class="ci"><span class="cx">✓</span><span>HackTheBox — Beginner machines: enumeration &amp; Linux fundamentals</span></div>
-        <div class="ci"><span class="cx">✓</span><span>Cybrary — Foundational cybersecurity &amp; networking courses</span></div>
-        <div class="ci"><span class="cx">✓</span><span>PortSwigger Web Security Academy — All server-side labs completed</span></div>
+  </header></div></div>
+
+  <div class="stats" id="stats"><div class="loading">Open the site through a web server or GitHub Pages, not by double-clicking the file.</div></div>
+
+  <section class="z" id="about"><div class="w">
+    <h2>About</h2>
+    <div class="about-grid">
+      <div class="about-text" id="bio"></div>
+      <div class="about-details">
+        <div class="about-row"><h4>Education</h4><p id="education">[COLLEGE | COURSE | YEARS]</p></div>
+        <div class="about-row"><h4>Location</h4><p id="location">[CITY, COUNTRY]</p></div>
+        <div class="about-row"><h4>Languages</h4><p id="languages">[LIST]</p></div>
+        <div class="about-row"><h4>Interests</h4><p id="interests">[LIST]</p></div>
       </div>
     </div>
+    <div class="skills-grid" id="skills"></div>
+  </div></section>
+
+  <section class="z bp" id="projects"><div class="w">
+    <div class="sh"><h2>Projects</h2><a href="projects.html">All projects</a></div>
+    <div class="grid" id="featured-projects"><div class="loading">Loading projects...</div></div>
+    <div class="more-repos"><button class="btn" onclick="toggleMoreRepos()">More repositories</button><div class="repo-list" id="more-repos-list" hidden></div></div>
+  </div></section>
+
+  <section class="z" id="writeups"><div class="w">
+    <div class="sh"><h2>Writeups</h2><a href="writeups.html">All writeups</a></div>
+    <div class="cases" id="writeups-list"><div class="loading">Loading writeups...</div></div>
+  </div></section>
+
+  <section class="z" id="activity"><div class="w">
+    <h2>Recent activity</h2>
+    <div class="cases" id="recent-activity"><div class="loading">Loading activity...</div></div>
+  </div></section>
+
+  <section class="z" id="achievements"><div class="w">
+    <h2>Achievements and certificates</h2>
+    <div class="hall" id="achievements-list"><div class="loading">Loading achievements...</div></div>
+  </div></section>
+
+  <section class="z" id="contact"><div class="w">
+    <div class="roe">
+      <h2>Contact</h2>
+      <p>Message me about internships, project ideas, or joining a CTF team. I read everything and reply fast.</p>
+      <a class="btn s" id="email-btn" href="#">Email me</a>
+      <a class="btn" id="linkedin-btn" href="#" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+      <a class="btn" href="https://github.com/vishalmani-11" target="_blank" rel="noopener noreferrer">GitHub</a>
+      <a class="btn" id="resume-btn" href="#" target="_blank" rel="noopener noreferrer" hidden>Resume</a>
+    </div>
+  </div></section>
+
+  <footer><div class="w"><div class="fg">
+    <div><b style="color:var(--hi)">Vishal Mani</b><p id="footer-tagline">[ONE LINE]</p></div>
+    <div><h4>Portfolio</h4><a href="#top">Home</a><a href="#about">About</a><a href="#projects">Projects</a><a href="#writeups">Writeups</a><a href="#achievements">Achievements</a></div>
+    <div><h4>Connect</h4><a href="#" id="footer-github">GitHub</a><a href="#" id="footer-linkedin">LinkedIn</a><a href="#" id="footer-email">Email</a></div>
   </div>
-</section>
+  <div class="fb"><span>&copy; 2026 Vishal Mani</span><span id="footer-stats"></span></div></div></footer>
+</div>
 
-<!-- SKILLS -->
-<section id="skills">
-  <div class="sl">Technical Arsenal</div>
-  <h2 class="st">Skills &amp; Tools</h2>
-  <div class="sg">
-    <div class="sc s1 reveal">
-      <div class="si">🐍</div>
-      <div class="scat">Languages</div>
-      <div class="tags"><span class="tag">Python</span><span class="tag">Go (basic)</span></div>
-    </div>
-    <div class="sc s2 reveal">
-      <div class="si">🔍</div>
-      <div class="scat">Pentesting Tools</div>
-      <div class="tags"><span class="tag">Burp Suite</span><span class="tag">Nmap</span><span class="tag">Nuclei</span><span class="tag">Wireshark</span><span class="tag">Metasploit</span><span class="tag">Gobuster</span></div>
-    </div>
-    <div class="sc s3 reveal">
-      <div class="si">🔥</div>
-      <div class="scat">Firewall / Networking</div>
-      <div class="tags"><span class="tag">nftables</span><span class="tag">iptables</span><span class="tag">UFW</span><span class="tag">Browser DevTools</span></div>
-    </div>
-    <div class="sc s4 reveal">
-      <div class="si">🖥️</div>
-      <div class="scat">Operating Systems</div>
-      <div class="tags"><span class="tag">Kali Linux</span><span class="tag">Arch Linux</span><span class="tag">Windows</span></div>
-    </div>
-    <div class="sc s5 reveal">
-      <div class="si">🎯</div>
-      <div class="scat">Domains</div>
-      <div class="tags"><span class="tag">Web Pentesting</span><span class="tag">Network Pentesting</span><span class="tag">Malware Analysis</span><span class="tag">Linux Hardening</span><span class="tag">Firewall Automation</span></div>
-    </div>
-  </div>
-  <div class="pb reveal">
-    <div class="pbi">🎓</div>
-    <div>
-      <div class="pbt">PortSwigger Web Security Academy — All Server-Side Labs Completed</div>
-      <div class="pbd">Hands-on exploitation of <span>SQLi, SSRF, XXE, Business Logic flaws &amp; Broken Auth</span> in controlled lab environments. Real exploitation — not just reading about it.</div>
-    </div>
-  </div>
-</section>
-
-<!-- PROJECTS -->
-<section id="projects">
-  <div class="sl">What I've Built</div>
-  <h2 class="st">Projects</h2>
-  <div class="pg">
-    <div class="pc reveal">
-      <div class="pt pt1" data-l="Python · 2025">👻</div>
-      <div class="pb2">
-        <div class="pl">Python — 2025</div>
-        <div class="ptit">GHOST — Linux Network Stealth Tool</div>
-        <div class="pd">Makes a Linux machine completely invisible on any network — no ping response, no scan results. Uses nftables, kernel-level ICMP blocking, MAC randomization, and auto-banning of port scanners.</div>
-        <div class="plinks"><a href="https://github.com/Vishalmani-11/GHOST" target="_blank" class="plink gh">GitHub →</a></div>
-      </div>
-    </div>
-    <div class="pc reveal">
-      <div class="pt pt2" data-l="Python · 2025">🔥</div>
-      <div class="pb2">
-        <div class="pl">Python — 2025</div>
-        <div class="ptit">Auto Config Firewall</div>
-        <div class="pd">Interactive terminal tool to configure UFW and iptables without memorizing commands. Supports port/IP allow-block rules, persistent saving, default hardening, and full reset.</div>
-        <div class="plinks"><a href="https://github.com/Vishalmani-11/auto-config-firewall" target="_blank" class="plink gh">GitHub →</a></div>
-      </div>
-    </div>
-    <div class="pc reveal">
-      <div class="pt pt3" data-l="Python · 2024">🔐</div>
-      <div class="pb2">
-        <div class="pl">Python — 2024</div>
-        <div class="ptit">Passbuild — Password Security Tool</div>
-        <div class="pd">Terminal tool for password generation, strength checking, and leet-speak munging. Fully local — no data ever leaves your machine.</div>
-        <div class="plinks"><a href="https://github.com/Vishalmani-11/passbuild" target="_blank" class="plink gh">GitHub →</a></div>
-      </div>
-    </div>
-    <div class="pc reveal">
-      <div class="pt pt4" data-l="Python · 2024">🦠</div>
-      <div class="pb2">
-        <div class="pl">Python — 2024</div>
-        <div class="ptit">Malware Scanner GUI &amp; ML Detection</div>
-        <div class="pd">GUI-based static malware scanner paired with a separate ML model for file classification. Identifies malicious files without executing them.</div>
-        <div class="plinks"><a href="https://github.com/Vishalmani-11" target="_blank" class="plink gh">GitHub →</a></div>
-      </div>
-    </div>
-    <div class="pc reveal">
-      <div class="pt pt5" data-l="Extension · 2024">🛡️</div>
-      <div class="pb2">
-        <div class="pl">Firefox Extension — 2024</div>
-        <div class="ptit">Popup Scanner — Firefox Extension</div>
-        <div class="pd">Browser extension that detects and blocks malicious popup scripts and ad-injection on web pages in real time, protecting users from client-side attacks.</div>
-        <div class="plinks"><a href="https://github.com/Vishalmani-11" target="_blank" class="plink gh">GitHub →</a></div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- CONTACT -->
-<section id="contact">
-  <div class="corb"></div>
-  <div class="cin reveal">
-    <div class="sl" style="justify-content:center">Get In Touch</div>
-    <h2 class="ctit">Let's<br><span class="cs">Connect</span><span class="cg">.</span></h2>
-    <p class="csub">Open to internships, CTF teams, collaborations, and anything interesting in the security space.</p>
-    <a href="mailto:vishalmaniarumukam@gmail.com" class="cem">
-      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-      vishalmaniarumukam@gmail.com
-    </a>
-    <div class="socs">
-      <a href="https://github.com/Vishalmani-11" target="_blank" class="sl2">
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.44 9.8 8.2 11.38.6.11.82-.26.82-.58v-2.03c-3.34.72-4.04-1.61-4.04-1.61-.54-1.38-1.33-1.75-1.33-1.75-1.09-.74.08-.73.08-.73 1.2.08 1.84 1.24 1.84 1.24 1.07 1.83 2.8 1.3 3.49 1 .11-.78.42-1.3.76-1.6-2.67-.3-5.47-1.33-5.47-5.93 0-1.31.47-2.38 1.24-3.22-.12-.3-.54-1.52.12-3.18 0 0 1.01-.32 3.3 1.23a11.5 11.5 0 0 1 3-.4c1.02.004 2.04.14 3 .4 2.28-1.55 3.29-1.23 3.29-1.23.66 1.66.24 2.88.12 3.18.77.84 1.24 1.91 1.24 3.22 0 4.61-2.81 5.63-5.48 5.93.43.37.81 1.1.81 2.22v3.29c0 .32.22.7.83.58C20.57 21.8 24 17.3 24 12c0-6.63-5.37-12-12-12z"/></svg>
-        GitHub
-      </a>
-      <a href="https://www.linkedin.com/in/vishal-m-905b78327" target="_blank" class="sl2">
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M20.45 20.45h-3.55v-5.57c0-1.33-.03-3.04-1.85-3.04-1.85 0-2.14 1.44-2.14 2.94v5.67H9.36V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.45v6.29zM5.34 7.43a2.06 2.06 0 1 1 0-4.12 2.06 2.06 0 0 1 0 4.12zM3.56 20.45h3.55V9H3.56v11.45zM22.22 0H1.77C.79 0 0 .77 0 1.73v20.54C0 23.23.79 24 1.77 24h20.45C23.21 24 24 23.23 24 22.27V1.73C24 .77 23.21 0 22.22 0z"/></svg>
-        LinkedIn
-      </a>
-      <a href="tel:9043916716" class="sl2">
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 13a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L7.91 9.91a16 16 0 0 0 6.16 6.16l.91-.91a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
-        +91 90439 16716
-      </a>
-    </div>
-  </div>
-</section>
-
-<footer>
-  <span>© 2025 Vishal M — Coimbatore, TN</span>
-  <span class="fs">Built with 🔐 &amp; curiosity</span>
-</footer>
-
-<script>
-  // Cursor
-  const cur=document.getElementById('cur'),ring=document.getElementById('curR');
-  let mx=0,my=0,rx=0,ry=0;
-  document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;});
-  (function a(){cur.style.transform=`translate(${mx-5}px,${my-5}px)`;rx+=(mx-rx)*.13;ry+=(my-ry)*.13;ring.style.transform=`translate(${rx-18}px,${ry-18}px)`;requestAnimationFrame(a);})();
-  document.querySelectorAll('a,button').forEach(el=>{
-    el.addEventListener('mouseenter',()=>ring.style.borderColor='var(--pink)');
-    el.addEventListener('mouseleave',()=>ring.style.borderColor='var(--green)');
-  });
-
-  // Scroll reveal
-  const obs=new IntersectionObserver(entries=>{entries.forEach((e,i)=>{if(e.isIntersecting)setTimeout(()=>e.target.classList.add('visible'),i*90);});},{threshold:.08});
-  document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
-
-  // Typing effect
-  const roleEl=document.getElementById('role');
-  const roles=['Pentester. Tool Builder. Threat Thinker.','Web & Network Security.','Linux Hardening Specialist.','Open Source Security Builder.'];
-  let ri=0,ci=0,del=false;
-  function type(){
-    const cur=roles[ri];
-    roleEl.textContent=del?cur.slice(0,ci--):cur.slice(0,ci++);
-    if(!del&&ci===cur.length+1){del=true;setTimeout(type,1800);return;}
-    if(del&&ci<0){del=false;ri=(ri+1)%roles.length;ci=0;setTimeout(type,400);return;}
-    setTimeout(type,del?40:75);
-  }
-  type();
-</script>
+<script src="main.js"></script>
 </body>
 </html>

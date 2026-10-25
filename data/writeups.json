@@ -1,0 +1,17 @@
+[
+  {
+    "slug": "sample-writeup",
+    "title": "Sample Writeup",
+    "date": "2026-01-01",
+    "category": "Web",
+    "platform": "Sample Platform",
+    "difficulty": 1,
+    "tags": [
+      "sample",
+      "web",
+      "demonstration"
+    ],
+    "summary": "This is a sample writeup to demonstrate the format and features",
+    "sample": true
+  }
+]
