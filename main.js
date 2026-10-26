@@ -30,13 +30,6 @@ function difficultyBars(level) {
 }
 
 // ============================================
-// Safe Render Wrapper
-// ============================================
-function safeRender(fn) {
-  try { fn(); } catch (e) { console.error('Render error:', e.message); }
-}
-
-// ============================================
 // Data Loading
 // ============================================
 let profileData, projectsData, writeupsData, achievementsData, githubData;
@@ -60,7 +53,11 @@ async function loadAllData() {
     loadJSON('achievements.json'),
     loadJSON('github.json')
   ]);
-  profileData = p; projectsData = pr; writeupsData = w; achievementsData = a; githubData = g;
+  profileData = p; projectsData = pr; achievementsData = a; githubData = g;
+  // build-site.mjs writes { data: [...] }. Accept that or a plain list.
+  writeupsData = Array.isArray(w) ? w : (w?.data || []);
+  // The inner pages (projects, writeups, writeup) read their data from window.
+  Object.assign(window, { profileData, projectsData, writeupsData, achievementsData, githubData });
 }
 
 // ============================================
@@ -118,9 +115,10 @@ function renderStats() {
   const container = $('stats');
   if (!container) return;
 
+  // Count only non-sample projects
   const featuredCount = projectsData?.filter(p => p.featured && !p.sample).length || 0;
-  const writeupCount = writeupsData?.filter(w => !w.sample)?.length || 0;
-  const achievementCount = achievementsData?.filter(a => !a.sample)?.length || 0;
+  const writeupCount = writeupsData?.filter(w => !w.sample).length || 0;
+  const achievementCount = achievementsData?.filter(a => !a.sample).length || 0;
   const tech = new Set();
   projectsData?.filter(p => !p.sample).forEach(p => p.tags?.forEach(t => tech.add(t)));
 
@@ -150,12 +148,14 @@ function renderProjects() {
     return;
   }
 
-  const featuredProjects = projectsData.filter(p => p.featured && !p.sample);
-  const otherRepos = projectsData.filter(p => !p.featured && !p.sample);
+  const featuredProjects = projectsData.filter(p => p.featured);
+  const otherRepos = projectsData.filter(p => !p.featured);
 
+  // Render featured projects
   featured.replaceChildren(...featuredProjects.map((p, i) => {
     const statusClass = p.status === 'Live' ? '' : 'soon';
-    const title = p.title || p.repo || 'Untitled';
+    const isSample = p.sample;
+    const title = isSample ? create('span', {}, [p.title || 'Untitled', create('span', { class: 'sample-badge' }, 'Sample')]) : p.title || 'Untitled';
 
     return create('a', { 
       class: 'card',
@@ -169,27 +169,28 @@ function renderProjects() {
         ])
       ]),
       create('h3', {}, title),
-      create('p', {}, p.summary || p.description || 'No description'),
+      create('p', {}, p.summary || 'No description'),
       create('div', { class: 'tags' }, (p.tags || []).map(tag => create('i', {}, tag))),
       create('div', { class: 'stt' }, [
         difficultyBars(p.difficulty || 1),
-        create('span', {}, 'View on GitHub')
+        create('span', {}, 'View')
       ])
     ]);
   }));
 
+  // Render other repos
   if (moreList && otherRepos.length > 0) {
     moreList.replaceChildren(...otherRepos.map(repo => {
-      const title = repo.title || repo.repo || repo.name || 'Untitled';
-      const ghRepo = githubData?.repos?.find(r => r.name === (repo.repo || repo.name));
-      const merged = { ...repo, ...ghRepo };
+      const isSample = repo.sample;
+      const title = isSample ? create('span', {}, [repo.title || repo.repo || 'Untitled', create('span', { class: 'sample-badge' }, 'Sample')]) : repo.title || repo.repo || 'Untitled';
+      const ghRepo = githubData?.repos?.find(r => r.name === repo.repo);
 
       return create('div', { class: 'repo-item' }, [
         create('h4', {}, title),
-        create('p', {}, merged.summary || merged.description || 'No description'),
+        create('p', {}, repo.summary || ghRepo?.description || 'No description'),
         create('div', { class: 'stt' }, [
-          create('span', {}, merged.language || ''),
-          create('span', {}, `${merged.stargazers_count || 0} stars`)
+          create('span', {}, ghRepo?.language || ''),
+          create('span', {}, `${ghRepo?.stargazers_count || 0} stars`)
         ])
       ]);
     }));
@@ -205,7 +206,7 @@ function renderWriteups() {
     return;
   }
 
-  const latest = writeupsData.data?.filter(w => !w.sample)?.slice(0, 5) || [];
+  const latest = writeupsData.filter(w => !w.sample).slice(0, 5);
   if (latest.length === 0) {
     container.replaceChildren(create('div', { class: 'empty-state' }, [
       create('h3', {}, 'No writeups yet'),
@@ -216,7 +217,8 @@ function renderWriteups() {
 
   container.replaceChildren(...latest.map(w => {
     const date = w.date ? new Date(w.date).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' }) : 'Unknown';
-    const title = w.title || 'Untitled';
+    const isSample = w.sample;
+    const title = isSample ? create('span', {}, [w.title || 'Untitled', create('span', { class: 'sample-badge' }, 'Sample')]) : w.title || 'Untitled';
 
     return create('a', { 
       class: 'row',
@@ -330,6 +332,9 @@ function renderContact() {
   }
 }
 
+// ============================================
+// Toggle More Repos
+// ============================================
 function toggleMoreRepos() {
   const list = $('more-repos-list');
   const btn = list?.previousElementSibling;
@@ -425,25 +430,71 @@ function initScrollSpy() {
 }
 
 // ============================================
+// Hero terminal: shows my real latest pushes and writeups
+// ============================================
+function timeAgo(iso) {
+  const t = Date.parse(iso);
+  if (!t) return '';
+  const sec = Math.max(0, (Date.now() - t) / 1000);
+  for (const [unit, size] of [['y', 31536000], ['mo', 2592000], ['d', 86400], ['h', 3600], ['m', 60]]) {
+    if (sec >= size) return `${Math.floor(sec / size)}${unit} ago`;
+  }
+  return 'just now';
+}
+
+function renderTerminal() {
+  const body = $('term-body');
+  if (!body) return;
+  const trunc = (text, n) => (text || '').split('\n')[0].slice(0, n);
+  const generated = githubData?.generatedAt;
+  const synced = generated && !generated.startsWith('2026-01-01') ? `synced ${timeAgo(generated)}` : 'waiting for first sync';
+  const chips = $('term-chips');
+  if (chips) chips.replaceChildren(create('span', {}, '~/portfolio'), create('span', {}, 'branch: main'), create('span', { class: 'v' }, synced));
+
+  let t = 0.3;
+  const delay = () => `animation-delay:${t.toFixed(1)}s`;
+  const line = (children, cls = '') => {
+    body.append(create('div', { class: ('tl ' + cls).trim(), style: delay() }, children));
+    t += 0.3;
+  };
+  const command = (text) => {
+    body.append(create('div', { class: 'tl', style: delay() }, [
+      create('span', { class: 'mu' }, '$ '),
+      create('span', { class: 'ty g', style: delay() }, text)
+    ]));
+    t += 1.7;
+  };
+
+  body.replaceChildren();
+  command('git log --oneline -5');
+  const recent = (githubData?.recent || []).slice(0, 5);
+  if (recent.length) {
+    recent.forEach(r => line([
+      create('span', { class: 'g' }, trunc(r.repo, 20)), ' ',
+      trunc(r.message, 30), ' ',
+      create('span', { class: 'mu' }, timeAgo(r.date))
+    ]));
+  } else {
+    line('no public pushes yet. Your next commit will show up here.', 'mu');
+  }
+  line(' ');
+  command('ls writeups | tail -3');
+  const latest = (writeupsData || []).filter(w => !w.sample).slice(0, 3);
+  if (latest.length) latest.forEach(w => line(`${w.slug}.md`));
+  else line('no writeups yet.', 'mu');
+  line(' ');
+  line([create('span', { class: 'g' }, 'vishal@portfolio'), create('span', { class: 'mu' }, ':~$ '), create('span', { class: 'cur' })]);
+}
+
+// ============================================
 // Initialize
 // ============================================
 async function init() {
-  try {
-    await loadAllData();
-    safeRender(renderHero);
-    safeRender(renderAbout);
-    safeRender(renderSkills);
-    safeRender(renderStats);
-    safeRender(renderProjects);
-    safeRender(renderWriteups);
-    safeRender(renderRecentActivity);
-    safeRender(renderAchievements);
-    safeRender(renderContact);
-    initScrollSpy();
-    initNetworkCanvas();
-  } catch (e) {
-    console.error('Initialization error:', e.message);
-  }
+  await loadAllData();
+  // One section failing must not stop the others
+  const safe = (fn) => { try { fn(); } catch (e) { console.error(e); } };
+  [renderHero, renderTerminal, renderAbout, renderSkills, renderStats, renderProjects, renderWriteups,
+   renderRecentActivity, renderAchievements, renderContact, initScrollSpy, initNetworkCanvas].forEach(safe);
 }
 
 if (document.readyState === 'loading') {
