@@ -16,6 +16,11 @@ const create = (tag, attrs = {}, ...children) => {
 const LV = ['Easy', 'Medium', 'Hard', 'Insane'];
 const DATA_PATH = 'data';
 
+function projectDetailUrl(repoName) {
+  const repo = (repoName || '').trim();
+  return repo ? `project.html?repo=${encodeURIComponent(repo)}` : '#';
+}
+
 // ============================================
 // Difficulty Bars
 // ============================================
@@ -58,7 +63,11 @@ async function loadAllData() {
   writeupsData = Array.isArray(w) ? w : (w?.data || []);
   // The inner pages (projects, writeups, writeup) read their data from window.
   Object.assign(window, { profileData, projectsData, writeupsData, achievementsData, githubData });
+  return { profileData, projectsData, writeupsData, achievementsData, githubData };
 }
+
+window.loadAllData = loadAllData;
+window.projectDetailUrl = projectDetailUrl;
 
 // ============================================
 // Render Functions
@@ -157,9 +166,10 @@ function renderProjects() {
     const isSample = p.sample;
     const title = isSample ? create('span', {}, [p.title || 'Untitled', create('span', { class: 'sample-badge' }, 'Sample')]) : p.title || 'Untitled';
 
-    return create('a', { 
+    return create('a', {
       class: 'card',
-      href: p.demo || (p.repo ? `https://github.com/vishalmani-11/${p.repo}` : '#')
+      href: projectDetailUrl(p.repo || p.name),
+      rel: 'noopener noreferrer'
     }, [
       create('div', { class: 'ct' }, [
         create('span', { class: 'n' }, String(i + 1).padStart(2, '0')),
